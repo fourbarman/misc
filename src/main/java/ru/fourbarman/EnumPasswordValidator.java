@@ -65,14 +65,21 @@ public class EnumPasswordValidator {
         return Optional.empty();
     }
 
-    public Optional<String> processValidatePassword(String password, String confirmation, String login) {
+    public Optional<String> validatePassLogin(String password, String login) {
         Optional<String> passwordError = validatePassword(password);
         if (passwordError.isPresent()) {
             return passwordError; // password != null
         }
-
         if (STRINGS_MATCH_BIPREDICATE.test(password, login)) {
             return Optional.of(PASSWORD_EQUALS_LOGIN_ERROR);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<String> processValidatePassword(String password, String confirmation, String login) {
+        Optional<String> validationError = validatePassLogin(password, login);
+        if (validationError.isPresent()) {
+            return validationError;
         }
 
         if (!STRINGS_MATCH_BIPREDICATE.test(password, confirmation)) {
